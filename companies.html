@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Information</title>
+
+
+
+
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #3498db;
+            padding: 20px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        footer {
+            background-color: #3498db;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        footer ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        footer ul li {
+            display: inline;
+            margin-right: 10px;
+        }
+
+        footer ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+
+        main {
+            padding: 20px;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .filter-section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .college-item {
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('colleges') }}">Colleges</a></li>
+                <li><a href="{{ url_for('companies') }}">Companies</a></li>
+                <li><a href="{{ url_for('resources') }}">Resources</a></li>
+                <li><a href="{{ url_for('account') }}">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="welcome-section">
+            <h1>Welcome to the Company Information Portal!</h1>
+        </section>
+        <section class="filter-section">
+            <h2>Filters</h2>
+            <label for="minCgpa">Min CGPA:</label>
+            <input type="number" id="minCgpa">
+
+            <label for="maxCgpa">Max CGPA:</label>
+            <input type="number" id="maxCgpa">
+
+            <label for="minCTC">Min CTC:</label>
+            <input type="number" id="minCTC">
+
+            <label for="maxCTC">Max CTC:</label>
+            <input type="number" id="maxCTC">
+
+            <label for="Branch">Branch:</label>
+            <input type="text" id="Branch">
+
+            <label for="name">Name:</label>
+            <input type="text" id="name">
+
+            <label for="Sector">Sector:</label>
+            <input type="text" id="Sector">
+
+            <button onclick="applyFilters()">Apply Filters</button>
+        </section>
+        <section class="college-list">
+
+            <div id="collegeContainer"></div>
+        </section>
+    </main>
+
+    <body> <!-- Corrected id here -->
+
+        <!-- <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js"></script> -->
+        <h1>List of companies</h1>
+        <ul id="companiesList"></ul> <!-- Corrected id here -->
+
+        <!-- <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js"></script> -->
+        <script type="module">
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+            import { getDatabase, ref, onValue, push, set, runTransaction } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyDC7vyNstr7W5OFDFBMX-gWG_dUFVpunF0",
+                authDomain: "careerplanningportal.firebaseapp.com",
+                projectId: "careerplanningportal",
+                storageBucket: "careerplanningportal.appspot.com",
+                messagingSenderId: "419778590692",
+                appId: "1:419778590692:web:2a85aef45860356b2339f1",
+                measurementId: "G-ZB4MJ69HTN"
+            };
+
+
+
+            const firebaseApp = initializeApp(firebaseConfig);
+            const database = getDatabase(firebaseApp);
+            const companiesRef = ref(database, "companies");
+
+            function showCompanies(filters) {
+                const companiesList = document.getElementById('companiesList');
+                companiesList.innerHTML = '';
+
+                onValue(companiesRef, (snapshot) => {
+                    const companies = snapshot.val();
+                    if (companies) {
+                        // Filter companies based on user input
+                        const filteredCompanies = Object.values(companies).filter(company => {
+                            // Implement filtering logic based on filter criteria
+                            return (!filters.minCgpa || company.cutoff_cgpa >= filters.minCgpa) &&
+                                (!filters.maxCgpa || company.cutoff_cgpa <= filters.maxCgpa) &&
+                                (!filters.minCTC || company.ctc >= filters.minCTC) &&
+                                (!filters.maxCTC || company.ctc <= filters.maxCTC) &&
+                                (!filters.Branch || company.branch.toLowerCase().includes(filters.Branch.toLowerCase())) &&
+                                (!filters.name || company.company_name.toLowerCase().includes(filters.name.toLowerCase())) &&
+                                (!filters.Sector || company.sector.toLowerCase().includes(filters.Sector.toLowerCase()));
+                        });
+
+                        // Display filtered companies
+                        filteredCompanies.forEach(company => {
+                            const companyItem = document.createElement('li');
+                            companyItem.textContent = `Name: ${company.company_name}, Branch: ${company.branch}, Cutoff CGPA: ${company.cutoff_cgpa}, CTC: ${company.ctc}, Sector: ${company.sector}`;
+                            companiesList.appendChild(companyItem);
+                        });
+                    }
+                }, (error) => {
+                    console.error("Error fetching companies:", error);
+                });
+            }
+
+            // Function to handle filter application
+            function applyFilters() {
+                // Get filter values from inputs
+                const minCgpa = document.getElementById('minCgpa').value;
+                const maxCgpa = document.getElementById('maxCgpa').value;
+                const minCTC = document.getElementById('minCTC').value;
+                const maxCTC = document.getElementById('maxCTC').value;
+                const Branch = document.getElementById('Branch').value.trim();
+                const name = document.getElementById('name').value.trim();
+                const Sector = document.getElementById('Sector').value.trim();
+
+                // Create filters object
+                const filters = {
+                    minCgpa: minCgpa ? parseFloat(minCgpa) : null,
+                    maxCgpa: maxCgpa ? parseFloat(maxCgpa) : null,
+                    minCTC: minCTC ? parseFloat(minCTC) : null,
+                    maxCTC: maxCTC ? parseFloat(maxCTC) : null,
+                    Branch: Branch || null,
+                    name: name || null,
+                    Sector: Sector || null
+                };
+
+                // Show companies based on filters
+                showCompanies(filters);
+            }
+
+            // Initial display of companies without filters
+            showCompanies({});
+
+            // Event listener for filter button
+            document.querySelector('button').addEventListener('click', applyFilters);
+            showCompanies();
+        </script>
+
+        <footer>
+            <p>© 2024 Career Planning Portal. All rights reserved.</p>
+            <ul>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+                <li><a href="#">Contact Us</a></li>
+            </ul>
+        </footer>
+    </body>
+
+</html>
