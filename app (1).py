@@ -16,7 +16,7 @@ genai.configure(api_key=GOOGLE_API_KEY)
 
 # Load the GenerativeModel
 model = genai.GenerativeModel('gemini-pro')
-
+# extraction
 @app.route('/colleges')
 def colleges():
     # Render the HTML template for the 'colleges' page
