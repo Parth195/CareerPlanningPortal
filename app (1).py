@@ -86,7 +86,7 @@ def index():
             mt_grade = request.form.get('Mechatronics')
             fm_grade = request.form.get('Fluid mechanics')
             input_text = f"My CGPA is {cgpa}, I am from {branch} branch, I have scored {man_sci_eng_grade} in Manufacturing science and engineering,{str_mat_grade} in Engineering mechanics/Strength of materials,{app_thermo_grade} in Applied thermodynamics,{mt_grade} in Mechatronics and {fm_grade} in Fluid mechanics, I have done my specialisation in {specialisation}, I have done my minor in {minor}, I have done {internships} internships and {projects} projects should I persue Higher Education or Job?"
-
+#hello
         elif branch == 'Civil':
             # Extract grades for Civil courses
             sa_grade = request.form.get('Structure analysis')
