@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources Information</title>
+
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #3498db;
+            padding: 20px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        footer {
+            background-color: #3498db;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        footer ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        footer ul li {
+            display: inline;
+            margin-right: 10px;
+        }
+
+        footer ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+
+        main {
+            padding: 20px;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .filter-section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .college-item {
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('colleges') }}">Colleges</a></li>
+                <li><a href="{{ url_for('companies') }}">Companies</a></li>
+                <li><a href="{{ url_for('resources') }}">Resources</a></li>
+                <li><a href="{{ url_for('account') }}">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="welcome-section">
+            <h1>Welcome to the Resources Information Portal!</h1>
+        </section>
+        <section class="filter-section">
+            <h2>Filters</h2>
+            <label for="minRating">Min Rating:</label>
+            <input type="number" id="minRating">
+
+            <label for="maxRating">Max Rating:</label>
+            <input type="number" id="maxRating">
+
+            <label for="Subject">Subject:</label>
+            <input type="text" id="Subject">
+
+            <label for="author">Author:</label>
+            <input type="text" id="author">
+
+            <label for="Type">Type:</label>
+            <input type="text" id="Type">
+
+            <button onclick="applyFilters()">Apply Filters</button>
+        </section>
+        <section class="college-list">
+
+            <div id="collegeContainer"></div>
+        </section>
+    </main>
+
+    <body> <!-- Corrected id here -->
+
+
+
+        <!-- <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js"></script> -->
+        <h1>List of resources</h1>
+        <ul id="resourcesList"></ul> <!-- Corrected id here -->
+
+        <!-- <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js"></script> -->
+        <script type="module">
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+            import { getDatabase, ref, onValue, push, set, runTransaction } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyDC7vyNstr7W5OFDFBMX-gWG_dUFVpunF0",
+                authDomain: "careerplanningportal.firebaseapp.com",
+                projectId: "careerplanningportal",
+                storageBucket: "careerplanningportal.appspot.com",
+                messagingSenderId: "419778590692",
+                appId: "1:419778590692:web:2a85aef45860356b2339f1",
+                measurementId: "G-ZB4MJ69HTN"
+            };
+
+
+
+            const firebaseApp = initializeApp(firebaseConfig);
+            const database = getDatabase(firebaseApp);
+            const resourcesRef = ref(database, "resources");
+
+            function showResources(filters) {
+                const resourcesList = document.getElementById('resourcesList');
+                resourcesList.innerHTML = '';
+
+                onValue(resourcesRef, (snapshot) => {
+                    const resources = snapshot.val();
+                    if (resources) {
+                        // Filter resources based on user input
+                        const filteredResources = Object.values(resources).filter(resource => {
+                            // Implement filtering logic based on filter criteria
+                            return (!filters.minRating || resource.rating >= filters.minRating) &&
+                                (!filters.maxRating || resource.rating <= filters.maxRating) &&
+                                (!filters.author || resource.author.toLowerCase().includes(filters.author.toLowerCase())) &&
+                                (!filters.subject || resource.subject.toLowerCase().includes(filters.subject.toLowerCase())) &&
+                                (!filters.type || resource.type.toLowerCase().includes(filters.type.toLowerCase()));
+                        });
+
+                        // Display filtered resources
+                        filteredResources.forEach(resource => {
+                            const resourceItem = document.createElement('li');
+                            resourceItem.textContent = `Author: ${resource.author}, Rating: ${resource.rating}, Subject: ${resource.subject}, Type: ${resource.type}`;
+                            resourcesList.appendChild(resourceItem);
+                        });
+                    }
+                }, (error) => {
+                    console.error("Error fetching resources:", error);
+                });
+            }
+
+            // Function to handle filter application
+            function applyFilters() {
+                // Get filter values from inputs
+                const minRating = document.getElementById('minRating').value;
+                const maxRating = document.getElementById('maxRating').value;
+                const author = document.getElementById('author').value.trim();
+                const subject = document.getElementById('Subject').value.trim();
+                const type = document.getElementById('Type').value.trim();
+
+                // Create filters object
+                const filters = {
+                    minRating: minRating ? parseFloat(minRating) : null,
+                    maxRating: maxRating ? parseFloat(maxRating) : null,
+                    author: author || null,
+                    subject: subject || null,
+                    type: type || null
+                };
+
+                // Show resources based on filters
+                showResources(filters);
+            }
+
+            // Initial display of resources without filters
+            showResources({});
+
+            // Event listener for filter button
+            document.querySelector('button').addEventListener('click', applyFilters);
+            showResources();
+        </script>
+
+        <footer>
+            <p>© 2024 Career Planning Portal. All rights reserved.</p>
+            <ul>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+                <li><a href="#">Contact Us</a></li>
+            </ul>
+        </footer>
+    </body>
+
+</html>

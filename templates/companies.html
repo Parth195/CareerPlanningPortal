@@ -4,7 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resources Information</title>
+    <title>Company Information</title>
+
+
+
 
 
     <style>
@@ -99,24 +102,30 @@
     </header>
     <main>
         <section class="welcome-section">
-            <h1>Welcome to the Resources Information Portal!</h1>
+            <h1>Welcome to the Company Information Portal!</h1>
         </section>
         <section class="filter-section">
             <h2>Filters</h2>
-            <label for="minRating">Min Rating:</label>
-            <input type="number" id="minRating">
+            <label for="minCgpa">Min CGPA:</label>
+            <input type="number" id="minCgpa">
 
-            <label for="maxRating">Max Rating:</label>
-            <input type="number" id="maxRating">
+            <label for="maxCgpa">Max CGPA:</label>
+            <input type="number" id="maxCgpa">
 
-            <label for="Subject">Subject:</label>
-            <input type="text" id="Subject">
+            <label for="minCTC">Min CTC:</label>
+            <input type="number" id="minCTC">
 
-            <label for="author">Author:</label>
-            <input type="text" id="author">
+            <label for="maxCTC">Max CTC:</label>
+            <input type="number" id="maxCTC">
 
-            <label for="Type">Type:</label>
-            <input type="text" id="Type">
+            <label for="Branch">Branch:</label>
+            <input type="text" id="Branch">
+
+            <label for="name">Name:</label>
+            <input type="text" id="name">
+
+            <label for="Sector">Sector:</label>
+            <input type="text" id="Sector">
 
             <button onclick="applyFilters()">Apply Filters</button>
         </section>
@@ -128,12 +137,10 @@
 
     <body> <!-- Corrected id here -->
 
-
-
         <!-- <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js"></script> -->
-        <h1>List of resources</h1>
-        <ul id="resourcesList"></ul> <!-- Corrected id here -->
+        <h1>List of companies</h1>
+        <ul id="companiesList"></ul> <!-- Corrected id here -->
 
         <!-- <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js"></script> -->
@@ -155,65 +162,71 @@
 
             const firebaseApp = initializeApp(firebaseConfig);
             const database = getDatabase(firebaseApp);
-            const resourcesRef = ref(database, "resources");
+            const companiesRef = ref(database, "companies");
 
-            function showResources(filters) {
-                const resourcesList = document.getElementById('resourcesList');
-                resourcesList.innerHTML = '';
+            function showCompanies(filters) {
+                const companiesList = document.getElementById('companiesList');
+                companiesList.innerHTML = '';
 
-                onValue(resourcesRef, (snapshot) => {
-                    const resources = snapshot.val();
-                    if (resources) {
-                        // Filter resources based on user input
-                        const filteredResources = Object.values(resources).filter(resource => {
+                onValue(companiesRef, (snapshot) => {
+                    const companies = snapshot.val();
+                    if (companies) {
+                        // Filter companies based on user input
+                        const filteredCompanies = Object.values(companies).filter(company => {
                             // Implement filtering logic based on filter criteria
-                            return (!filters.minRating || resource.rating >= filters.minRating) &&
-                                (!filters.maxRating || resource.rating <= filters.maxRating) &&
-                                (!filters.author || resource.author.toLowerCase().includes(filters.author.toLowerCase())) &&
-                                (!filters.subject || resource.subject.toLowerCase().includes(filters.subject.toLowerCase())) &&
-                                (!filters.type || resource.type.toLowerCase().includes(filters.type.toLowerCase()));
+                            return (!filters.minCgpa || company.cutoff_cgpa >= filters.minCgpa) &&
+                                (!filters.maxCgpa || company.cutoff_cgpa <= filters.maxCgpa) &&
+                                (!filters.minCTC || company.ctc >= filters.minCTC) &&
+                                (!filters.maxCTC || company.ctc <= filters.maxCTC) &&
+                                (!filters.Branch || company.branch.toLowerCase().includes(filters.Branch.toLowerCase())) &&
+                                (!filters.name || company.company_name.toLowerCase().includes(filters.name.toLowerCase())) &&
+                                (!filters.Sector || company.sector.toLowerCase().includes(filters.Sector.toLowerCase()));
                         });
 
-                        // Display filtered resources
-                        filteredResources.forEach(resource => {
-                            const resourceItem = document.createElement('li');
-                            resourceItem.textContent = `Author: ${resource.author}, Rating: ${resource.rating}, Subject: ${resource.subject}, Type: ${resource.type}`;
-                            resourcesList.appendChild(resourceItem);
+                        // Display filtered companies
+                        filteredCompanies.forEach(company => {
+                            const companyItem = document.createElement('li');
+                            companyItem.textContent = `Name: ${company.company_name}, Branch: ${company.branch}, Cutoff CGPA: ${company.cutoff_cgpa}, CTC: ${company.ctc}, Sector: ${company.sector}`;
+                            companiesList.appendChild(companyItem);
                         });
                     }
                 }, (error) => {
-                    console.error("Error fetching resources:", error);
+                    console.error("Error fetching companies:", error);
                 });
             }
 
             // Function to handle filter application
             function applyFilters() {
                 // Get filter values from inputs
-                const minRating = document.getElementById('minRating').value;
-                const maxRating = document.getElementById('maxRating').value;
-                const author = document.getElementById('author').value.trim();
-                const subject = document.getElementById('Subject').value.trim();
-                const type = document.getElementById('Type').value.trim();
+                const minCgpa = document.getElementById('minCgpa').value;
+                const maxCgpa = document.getElementById('maxCgpa').value;
+                const minCTC = document.getElementById('minCTC').value;
+                const maxCTC = document.getElementById('maxCTC').value;
+                const Branch = document.getElementById('Branch').value.trim();
+                const name = document.getElementById('name').value.trim();
+                const Sector = document.getElementById('Sector').value.trim();
 
                 // Create filters object
                 const filters = {
-                    minRating: minRating ? parseFloat(minRating) : null,
-                    maxRating: maxRating ? parseFloat(maxRating) : null,
-                    author: author || null,
-                    subject: subject || null,
-                    type: type || null
+                    minCgpa: minCgpa ? parseFloat(minCgpa) : null,
+                    maxCgpa: maxCgpa ? parseFloat(maxCgpa) : null,
+                    minCTC: minCTC ? parseFloat(minCTC) : null,
+                    maxCTC: maxCTC ? parseFloat(maxCTC) : null,
+                    Branch: Branch || null,
+                    name: name || null,
+                    Sector: Sector || null
                 };
 
-                // Show resources based on filters
-                showResources(filters);
+                // Show companies based on filters
+                showCompanies(filters);
             }
 
-            // Initial display of resources without filters
-            showResources({});
+            // Initial display of companies without filters
+            showCompanies({});
 
             // Event listener for filter button
             document.querySelector('button').addEventListener('click', applyFilters);
-            showResources();
+            showCompanies();
         </script>
 
         <footer>
