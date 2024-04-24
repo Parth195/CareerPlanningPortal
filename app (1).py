@@ -56,7 +56,7 @@ def index():
             daa_grade = request.form.get('daa')
             intro_to_c_grade = request.form.get('intro-to-c')
             cn_grade = request.form.get('cn')
-            
+            #added prompt
             input_text = f"My CGPA is {cgpa}, I am from {branch} branch, I have scored {dsa_grade} in Data Structures and Algorithms,{oops_grade} in Object Oriented Programming,{daa_grade} in Design and Analysis of Algorithms,{intro_to_c_grade} in Introduction to C programming and {cn_grade} in Computer Networks, I have done my specialisation in {specialisation}, I have done my minor in {minor}, I have done {internships} internships and {projects} projects should I persue Higher Education or Job?"
 
         elif branch == 'ECE':
