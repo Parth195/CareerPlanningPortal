@@ -66,7 +66,7 @@ def index():
             emb_grade = request.form.get('Embedded system')
             dc_grade = request.form.get('Digital communication')
             sns_grade = request.form.get('Signal and system')
-            #hello
+            #a
             input_text = f"My CGPA is {cgpa}, I am from {branch} branch, I have scored {de_grade} in Digital Electronics,{vlsi_grade} in VLSI,{emb_grade} in Embedded system,{dc_grade} in Digital communication and {sns_grade} in Signal and system, I have done my specialisation in {specialisation}, I have done my minor in {minor}, I have done {internships} internships and {projects} projects should I persue Higher Education or Job?"
 
         elif branch == 'Chemical':
