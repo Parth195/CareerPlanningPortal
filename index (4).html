@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Planning Portal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #3498db;
+            padding: 20px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .input-section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-section h2 {
+            margin-bottom: 20px;
+        }
+
+        .input-section label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .input-section input,
+        .input-section select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .input-section button {
+            background-color: #2ecc71;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .input-section button:hover {
+            background-color: #27ae60;
+        }
+
+        footer {
+            background-color: #3498db;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        footer ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        footer ul li {
+            display: inline;
+            margin-right: 10px;
+        }
+
+        footer ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .result-container {
+            margin-top: 20px;
+        }
+
+        .result {
+            font-size: 16px;
+        }
+
+        .result strong {
+            font-weight: bold;
+        }
+
+        .result ul {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('colleges') }}">Colleges</a></li>
+                <li><a href="{{ url_for('companies') }}">Companies</a></li>
+                <li><a href="{{ url_for('resources') }}">Resources</a></li>
+                <li><a href="{{ url_for('account') }}">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="welcome-section">
+            <h1>Welcome to the Career Planning Portal!</h1>
+        </section>
+        <section class="input-section">
+            <h2>Input Form</h2>
+            <form action="/" method="POST" id="inputForm">
+                <label for="cgpa">CGPA:</label>
+                <input type="text" id="cgpa" name="cgpa" required>
+
+                <label for="branch">Branch:</label>
+                <select id="branch" name="branch" onchange="showCourses()" required>
+                    <option value="">Select Branch</option>
+                    <option value="CSE">CSE</option>
+                    <option value="ECE">ECE</option>
+                    <option value="Civil">Civil</option>
+                    <option value="Mechanical">Mechanical</option>
+                    <option value="Chemical">Chemical</option>
+                </select>
+
+                <div id="cseGrades" style="display: none;">
+                    <label for="dsa">DSA:</label>
+                    <select id="dsa" name="dsa">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                    <label for="oops">OOPS:</label>
+                    <select id="oops" name="oops">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                    <label for="daa">DAA:</label>
+                    <select id="daa" name="daa">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                    <label for="intro-to-c">Intro to C:</label>
+                    <select id="intro-to-c" name="intro-to-c">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                    <label for="cn">CN:</label>
+                    <select id="cn" name="cn">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+                </div>
+
+                <div id="eceGrades" style="display: none;">
+                    <!-- Courses for ECE -->
+                    <label for="Digital electronics">Digital electronics:</label>
+                    <select id="Digital electronics" name="Digital electronics">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                    <label for="VLSI">VLSI:</label>
+                    <select id="VLSI" name="VLSI">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                    <label for="Embedded system">Embedded system:</label>
+                    <select id="Embedded system" name="Embedded system">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                    <label for="Digital communication">Digital communication:</label>
+                    <select id="Digital communication" name="Digital communication">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                    <label for="Signal and system">Signal and system:</label>
+                    <select id="Signal and system" name="Signal and system">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                </div>
+
+                <div id="mechGrades" style="display: none;">
+                    <!-- Courses for Mech -->
+                    <label for="Manufacturing science and engineering">Manufacturing science and engineering:</label>
+                    <select id="Manufacturing science and engineering" name="Manufacturing science and engineering">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                    <label for="Engineering mechanics/Strength of materials">Engineering mechanics/Strength of
+                        materials:</label>
+                    <select id="Engineering mechanics/Strength of materials"
+                        name="Engineering mechanics/Strength of materials">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                    <label for="Applied thermodynamics">Applied thermodynamics:</label>
+                    <select id="Applied thermodynamics" name="Applied thermodynamics">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                    <label for="Mechatronics">Mechatronics:</label>
+                    <select id="Mechatronics" name="Mechatronics">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                    <label for="Fluid mechanics">Fluid mechanics:</label>
+                    <select id="Fluid mechanics" name="Fluid mechanics">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                </div>
+
+                <div id="civilGrades" style="display: none;">
+                    <!-- Courses for Civil -->
+                    <label for="Structure analysis">Structure analysis :</label>
+                    <select id="Structure analysis" name="Structure analysis">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                    <label for="Strength of materials">Strength of materials:</label>
+                    <select id="Strength of materials" name="Strength of materials">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                    <label for="Hydraulic engineering">Hydraulic engineering:</label>
+                    <select id="Hydraulic engineering" name="Hydraulic engineering">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                    <label for="Soil mechanics and foundation engineering">Soil mechanics and foundation engineering
+                        :</label>
+                    <select id="Soil mechanics and foundation engineering"
+                        name="Soil mechanics and foundation engineering">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                    <label for="Design of steel structures">Design of steel structures:</label>
+                    <select id="Design of steel structures" name="Design of steel structures">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                </div>
+
+                <div id="chemGrades" style="display: none;">
+                    <!-- Courses for Chemical -->
+                    <label for="Chemical Principles">Chemical Principles :</label>
+                    <select id="Chemical Principles" name="Chemical Principles">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                    <label for="Basic Organic chemistry">Basic Organic chemistry :</label>
+                    <select id="Basic Organic chemistry" name="Basic Organic chemistry">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                    <label for="Molecular modelling">Molecular modelling :</label>
+                    <select id="Molecular modelling" name="Molecular modelling">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                    <label for="Inorganic chemistry">Inorganic chemistry :</label>
+                    <select id="Inorganic chemistry" name="Inorganic chemistry">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                    <label for="Material Science">Material Science :</label>
+                    <select id="Material Science" name="Material Science">
+                        <option value="">Select Grade</option>
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+                        <option value="C">C</option>
+                        <option value="C-">C-</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+
+                </div>
+
+                <label for="specialisation">Specialisation (if any):</label>
+                <input type="text" id="specialisation" name="specialisation">
+
+                <label for="minor">Minor (if any):</label>
+                <input type="text" id="minor" name="minor">
+
+                <label for="internships">Internships:</label>
+                <textarea id="internships" name="internships" rows="4" placeholder="List internships done"></textarea>
+
+                <label for="projects">Projects:</label>
+                <textarea id="projects" name="projects" rows="4" placeholder="List projects made"></textarea>
+
+                <button type="submit">Submit</button>
+            </form>
+
+
+        </section>
+        {% if result %}
+        <section class="result-container">
+            <h2>Generated Output:</h2>
+            <div class="result">
+                {% for line in result.split('\n') %}
+                {% if line.strip() %}
+                {% if '**' in line %}
+                <strong>{{ line|replace('**', '')|replace('**', '') }}</strong><br>
+                {% elif '*' in line %}
+                <br>
+                {{ line|replace('*', '') }}
+                {% else %}
+                {{ line }}
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+    </main>
+    <footer>
+        <p>© 2024 Career Planning Portal. All rights reserved.</p>
+        <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Contact Us</a></li>
+        </ul>
+    </footer>
+
+    <script>
+        function showCourses() {
+            var branch = document.getElementById("branch").value;
+            var cseGrades = document.getElementById("cseGrades");
+            var eceGrades = document.getElementById("eceGrades");
+            var mechGrades = document.getElementById("mechGrades");
+            var civilGrades = document.getElementById("civilGrades");
+            var chemGrades = document.getElementById("chemGrades");
+
+            // Hide all course grade sections
+            cseGrades.style.display = "none";
+            eceGrades.style.display = "none";
+            mechGrades.style.display = "none";
+            civilGrades.style.display = "none";
+            chemGrades.style.display = "none";
+
+            // Show course grade section based on selected branch
+            if (branch === "CSE") {
+                cseGrades.style.display = "block";
+            } else if (branch === "ECE") {
+                eceGrades.style.display = "block";
+            } else if (branch === "Mechanical") {
+                mechGrades.style.display = "block";
+            } else if (branch === "Civil") {
+                civilGrades.style.display = "block";
+            } else if (branch === "Chemical") {
+                chemGrades.style.display = "block";
+            }
+        }
+    </script>
+
+</body>
+
+</html>
